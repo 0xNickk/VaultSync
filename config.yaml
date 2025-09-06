@@ -1,0 +1,37 @@
+vault:
+  path: 
+  branch: main
+sync:
+  mode: on_close
+  interval_minutes: 2
+  process_name: Obsidian.exe
+backup:
+  enabled: true
+  directory: 
+  max_backups: 2
+logging:
+  file: VaultSync.log
+  level: INFO
+notification:
+  enabled: true
+  timeout: 3
+  icon_path: None
+git:
+  timeout: 120
+  user_name: 
+  user_email: 
+  gitignore:
+    obsidian: []
+    system:
+    - .DS_Store
+    - Thumbs.db
+    - '*.tmp'
+    - '*.lock'
+    - '*.swp'
+    - '*~'
+    directories:
+    - .trash/
+    - __pycache__/
+    - .vscode/
+    - .idea/
+    custom: []
