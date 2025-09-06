@@ -112,16 +112,6 @@ python VaultSync.py --enable-autorun
 python VaultSync.py --disable-autorun
 ```
 
-### Configuration Commands
-
-```bash
-# View help
-python VaultSync.py --help
-
-# Check version
-python VaultSync.py --version
-```
-
 ## 📋 Sync Modes
 
 ### On-Close Mode (Default)
@@ -198,14 +188,6 @@ python VaultSync.py --status  # Check current status
 - **Never share your `.env` file** - contains sensitive tokens
 - **Use Personal Access Tokens** - more secure than passwords
 - **Limit token permissions** - only grant necessary repository access
-  
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
 
 ## 📧 Support
 
