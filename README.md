@@ -26,7 +26,7 @@ While the official [@Vinzent03/obsidian-git](https://github.com/Vinzent03/obsidi
 
 - Python 3.8 or higher
 - Git installed and accessible from command line
-- GitHub Personal Access Token
+- [GitHub Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 - Windows OS (for auto-start features)
 
 ### Setup
