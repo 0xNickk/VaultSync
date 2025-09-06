@@ -2,7 +2,7 @@
 <img src = "https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue"> <img src = "https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white"> <img src = "https://img.shields.io/badge/Obsidian-483699?style=for-the-badge&logo=Obsidian&logoColor=white">
 
 
-## 📖 Overview
+## 📖 Purpose
 
 VaultSync is a powerful command-line tool designed to automatically synchronize your Obsidian Vault with GitHub repositories. It monitors Obsidian's process state and performs Git operations seamlessly in the background, ensuring your notes are always backed up and synchronized across devices.
 
