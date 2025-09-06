@@ -1,9 +1,5 @@
 # VaultSync - Obsidian Vault Synchronization Tool
 
-**Author:** 0xNickk  
-**Version:** 2.1.0  
-**License:** MIT
-
 ## 📖 Overview
 
 VaultSync is a powerful command-line tool designed to automatically synchronize your Obsidian vaults with GitHub repositories. It monitors Obsidian's process state and performs Git operations seamlessly in the background, ensuring your notes are always backed up and synchronized across devices.
@@ -170,71 +166,6 @@ GITHUB_USERNAME=YourGitHubUsername
 GITHUB_REPOSITORY=YourRepositoryName
 ```
 
-## 🎯 Workflow Examples
-
-### Basic Setup
-```bash
-# 1. Configure vault and credentials
-python VaultSync.py --vault-path "C:/MyObsidianVault"
-python VaultSync.py --git-username "0xNickk"
-python VaultSync.py --git-email "nick@example.com"
-python VaultSync.py --github-username "0xNickk"
-python VaultSync.py --github-repository "ObsidianVault"
-python VaultSync.py --github-token "ghp_xxxxxxxxxxxx"
-
-# 2. Check configuration
-python VaultSync.py --config
-
-# 3. Start VaultSync
-python VaultSync.py --background
-
-# 4. Enable auto-start (optional)
-python VaultSync.py --enable-autorun
-```
-
-### Multi-Device Sync Setup
-```bash
-# Configure for interval sync every 5 minutes
-python VaultSync.py --sync-mode "interval"
-python VaultSync.py --interval-time 5
-python VaultSync.py --background
-```
-
-## 📊 Status Display
-
-Use `--config` to view your current configuration in a clean tree format:
-
-```
-📁 VaultSync Configuration
-├── 📂 Files
-│   ├── 📄 Config: config.yaml
-│   ├── 🔑 Environment: .env
-│   └── 📁 Directory: C:/VaultSync
-├── 📋 config.yaml
-│   ├── 📁 Vault
-│   │   ├── path: C:/MyVault
-│   │   └── branch: main
-│   └── ⚙️ Sync
-│       ├── mode: on_close
-│       └── process_name: Obsidian.exe
-└── 🔐 .env
-    ├── GITHUB_TOKEN: ghp_****xxxx
-    ├── GITHUB_USERNAME: 0xNickk
-    └── GITHUB_REPOSITORY: ObsidianVault
-```
-
-## 🔍 Logging
-
-VaultSync creates detailed logs in `VaultSync.log`:
-
-```
-[2025-01-15 14:30:15] [INFO] 🔄 VaultSync Starting
-[2025-01-15 14:30:15] [INFO] 📁 Vault: C:/MyObsidianVault
-[2025-01-15 14:30:15] [INFO] ⚙️ Mode: on_close
-[2025-01-15 14:30:16] [INFO] [+] Git repository setup completed
-[2025-01-15 14:30:16] [INFO] [+] Starting on-close mode - monitoring Obsidian
-```
-
 ## ⚠️ Troubleshooting
 
 ### Common Issues
@@ -260,38 +191,12 @@ python VaultSync.py --status  # Check current status
 - Check token permissions (read/write)
 - Ensure repository exists
 
-### Error Messages
-
-| Error | Solution |
-|-------|----------|
-| `Configuration is incomplete` | Run configuration commands |
-| `Vault path does not exist` | Set valid `--vault-path` |
-| `GitHub token authentication failed` | Check `--github-token` |
-| `Process already running` | Use `--stop` first |
-
 ## 🔒 Security Notes
 
 - **Never share your `.env` file** - contains sensitive tokens
 - **Use Personal Access Tokens** - more secure than passwords
 - **Limit token permissions** - only grant necessary repository access
-- **Keep VaultSync updated** - for latest security features
-
-## 📄 File Structure
-
-```
-VaultSync/
-├── VaultSync.py           # Main CLI entry point
-├── src/
-│   ├── service_handler.py # Process management
-│   ├── config_manager.py  # Configuration handling
-│   └── sync.py           # Core sync engine
-├── config.yaml           # Configuration file
-├── .env                  # Environment variables
-├── VaultSync.log         # Operation logs
-├── requirements.txt      # Python dependencies
-└── README.md            # This documentation
-```
-
+  
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -304,7 +209,6 @@ VaultSync/
 
 For issues, questions, or feature requests:
 - **GitHub Issues:** [Create an issue](https://github.com/0xNickk/VaultSync/issues)
-- **Email:** Contact via GitHub profile
 
 ## 📝 License
 
@@ -312,4 +216,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Made with ❤️ by 0xNickk**
+**Made by 0xNickk**
