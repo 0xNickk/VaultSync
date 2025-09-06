@@ -80,36 +80,10 @@ python VaultSync.py --max-backups 5
 python VaultSync.py --notification "enable"
 ```
 
-## Usage
+## Preview
 
-### Basic Commands
+<img width="1443" height="682" alt="image" src="https://github.com/user-attachments/assets/47896b32-b746-463e-afbe-75dbf559d7c7" />
 
-```bash
-# Run normally
-python VaultSync.py --run
-
-# Run in background
-python VaultSync.py --background
-
-# Stop background process
-python VaultSync.py --stop
-
-# Check status
-python VaultSync.py --status
-
-# Show configuration
-python VaultSync.py --config
-```
-
-### Auto-start Commands
-
-```bash
-# Enable auto-start on Windows boot
-python VaultSync.py --enable-autorun
-
-# Disable auto-start
-python VaultSync.py --disable-autorun
-```
 
 ## Sync Modes
 
