@@ -1,4 +1,9 @@
+<p align="center">
+  <img width="250" height="250" src="https://github.com/user-attachments/assets/a2ec549f-d730-4b4e-a0e5-403dafb4dbae" />
+</p>
+
 # VaultSync
+
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
