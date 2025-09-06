@@ -136,7 +136,7 @@ python VaultSync.py --version
 
 ## 🔧 Configuration Files
 
-VaultSync creates two configuration files:
+VaultSync uses two configuration files:
 
 ### `config.yaml`
 ```yaml
