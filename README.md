@@ -85,7 +85,7 @@ python VaultSync.py --notification "enable"
 <img width="1666" height="712" alt="image" src="https://github.com/user-attachments/assets/89233e5a-2f5a-4520-85e5-fd61db33a438" />
 
 
-## Sync Modes
+## 🔄 Sync Modes
 
 ### On-Close Mode (Default)
 - Pulls when Obsidian starts
@@ -129,7 +129,7 @@ GITHUB_USERNAME=YourGitHubUsername
 GITHUB_REPOSITORY=YourRepositoryName
 ```
 
-## Troubleshooting
+## ⚠️ Troubleshooting
 
 ### Common Issues
 
@@ -157,8 +157,16 @@ python VaultSync.py --status  # Check current status
 ## Security
 
 - Never share your `.env` file - contains sensitive tokens
-- Use Personal Access Tokens instead of passwords
 - Limit token permissions to necessary repository access only
+
+
+## Programmed Features
+
+- Multi-Platform Support - Linux and macOS compatibility
+- SSH Authentication - Secure SSH key-based authentication as alternative to tokens
+- Advanced Scheduling - Date/time specific synchronization with cron-like syntax
+- Multi-Repository Support - Manage multiple Obsidian vaults with different repositories
+- Vault Encryption - End-to-end encryption for enhanced security
 
 ## Support
 
