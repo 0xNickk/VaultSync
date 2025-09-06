@@ -1,18 +1,199 @@
 # VaultSync
 
-## Introduzione
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
+![Obsidian](https://img.shields.io/badge/Obsidian-7C3AED?logo=obsidian&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-VaultSync è una soluzione progettata per migliorare la gestione delle versioni nei tuoi progetti Obsidian. Nonostante l'esistenza del plugin @Vinzent03/obsidian-git disponibile nella community di Obsidian, ho deciso di sviluppare VaultSync a causa di continui crash causati dall'utilizzo del plugin esistente. Questo problema ha reso difficile l'utilizzo di Obsidian come strumento di produttività.
+## Purpose
 
-## Perché VaultSync?
+While the official [@Vinzent03/obsidian-git](https://github.com/Vinzent03/obsidian-git) plugin exists in the Obsidian community store, VaultSync was developed as a personal solution to address stability issues I encountered. After experiencing frequent crashes with the existing plugin that significantly impacted my productivity, I researched online and discovered that other users were facing similar problems. This led me to develop VaultSync as a more stable and highly customizable alternative that could be tailored to specific user needs and preferences.
 
-La nostra soluzione mira a offrire un'esperienza più stabile e personalizzabile per la gestione delle versioni. VaultSync è progettato per essere facilmente configurabile, consentendo agli utenti di adattarlo secondo le proprie esigenze.
+## Features
 
-## Caratteristiche principali
+- **Stable Operation** - Designed to prevent crashes and improve overall reliability
+- **Automatic Synchronization** - Syncs when Obsidian starts/stops or at configurable intervals
+- **Smart Backup System** - Creates local backups before sync operations
+- **Desktop Notifications** - Real-time sync status updates
+- **Background Operation** - Runs silently without interrupting workflow
+- **Windows Auto-start** - Optional boot-time startup
+- **Comprehensive Logging** - Detailed operation logs for troubleshooting
+- **Flexible Configuration** - Highly customizable through command-line arguments
 
-- **Stabilità**: Progettato per ridurre i crash e migliorare l'affidabilità.
-- **Personalizzazione**: Ampie opzioni per adattare il funzionamento del plugin alle tue necessità.
+## Installation
 
-## Conclusione
+### Prerequisites
 
-Spero che VaultSync possa migliorare la tua esperienza con Obsidian e rendere la gestione delle versioni un processo più fluido e senza intoppi. Grazie per aver scelto VaultSync!
+- Python 3.8 or higher
+- Git installed and accessible from command line
+- GitHub Personal Access Token
+- Windows OS (for auto-start features)
+
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/0xNickk/VaultSync.git
+   cd VaultSync
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Configure VaultSync (see Configuration section below)
+
+## Configuration
+
+### Required Settings
+
+```bash
+# Set vault path
+python VaultSync.py --vault-path "C:/Path/To/Your/Vault"
+
+# Set Git credentials
+python VaultSync.py --git-username "YourGitUsername"
+python VaultSync.py --git-email "your.email@example.com"
+
+# Set GitHub credentials
+python VaultSync.py --github-username "YourGitHubUsername"
+python VaultSync.py --github-repository "YourRepositoryName"
+python VaultSync.py --github-token "ghp_your_personal_access_token"
+```
+
+### Optional Settings
+
+```bash
+# Sync mode (default: on_close)
+python VaultSync.py --sync-mode "interval"
+
+# Interval timing (for interval mode)
+python VaultSync.py --interval-time 5  # minutes
+
+# Backup configuration
+python VaultSync.py --backup "enable"
+python VaultSync.py --backup-dir "C:/Backups/Vault"
+python VaultSync.py --max-backups 5
+
+# Notifications
+python VaultSync.py --notification "enable"
+```
+
+## Usage
+
+### Basic Commands
+
+```bash
+# Run normally
+python VaultSync.py --run
+
+# Run in background
+python VaultSync.py --background
+
+# Stop background process
+python VaultSync.py --stop
+
+# Check status
+python VaultSync.py --status
+
+# Show configuration
+python VaultSync.py --config
+```
+
+### Auto-start Commands
+
+```bash
+# Enable auto-start on Windows boot
+python VaultSync.py --enable-autorun
+
+# Disable auto-start
+python VaultSync.py --disable-autorun
+```
+
+## Sync Modes
+
+### On-Close Mode (Default)
+- Pulls when Obsidian starts
+- Pushes when Obsidian closes
+- Minimal resource usage
+- Ideal for single-device usage
+
+### Interval Mode
+- Pulls when Obsidian starts
+- Pushes at regular intervals while Obsidian is running
+- Suitable for multi-device synchronization
+- Configurable interval timing
+
+## Configuration Files
+
+### config.yaml
+```yaml
+vault:
+  path: "C:/Path/To/Your/Vault"
+  branch: "main"
+
+sync:
+  mode: "on_close"
+  interval_minutes: 2
+  process_name: "Obsidian.exe"
+
+backup:
+  enabled: true
+  directory: "C:/Backups"
+  max_backups: 2
+
+git:
+  user_name: "YourUsername"
+  user_email: "your.email@example.com"
+```
+
+### .env
+```bash
+GITHUB_TOKEN=ghp_your_personal_access_token
+GITHUB_USERNAME=YourGitHubUsername
+GITHUB_REPOSITORY=YourRepositoryName
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Configuration Incomplete:**
+```bash
+python VaultSync.py --config  # Check missing fields
+```
+
+**VaultSync Won't Start:**
+```bash
+python VaultSync.py --check   # Verify requirements
+```
+
+**Process Already Running:**
+```bash
+python VaultSync.py --stop    # Stop background process
+python VaultSync.py --status  # Check current status
+```
+
+**Git Authentication Issues:**
+- Verify GitHub token has repository access
+- Check token permissions (read/write)
+- Ensure repository exists
+
+## Security
+
+- Never share your `.env` file - contains sensitive tokens
+- Use Personal Access Tokens instead of passwords
+- Limit token permissions to necessary repository access only
+
+## Support
+
+For issues, questions, or feature requests, please create an issue on the [GitHub repository](https://github.com/0xNickk/VaultSync/issues).
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+**Developed by 0xNickk**
