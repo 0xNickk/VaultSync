@@ -62,72 +62,51 @@ class GitConfig:
 class ConfigManager:
 
         
-    def __init__( self, config_path: str = "config.yaml", env_path: str = ".env" ):
-        
+    def __init__( self, config_path: str = "config.yaml", env_path: str = ".env" ):        
         current_dir = Path(__file__).parent.absolute()  # src directory
-        self.base_dir = current_dir.parent.absolute()   # VaultSync directory
-        
+        self.base_dir = current_dir.parent.absolute()   # VaultSync directory        
         self.config_path = self.base_dir / config_path
         self.env_path = self.base_dir / env_path
         self._load_environment()
-        self._load_config()
-        
-    def _load_environment( self ) -> None:
-    
+        self._load_config()        
+    def _load_environment( self ) -> None:    
         if self.env_path.exists():
             load_dotenv(self.env_path)
         else:
-            raise FileNotFoundError(f"Environment file not found: {self.env_path}")
-        
-    
+            raise FileNotFoundError(f"Environment file not found: {self.env_path}")        
     def _load_config( self ) -> None:
-
-        # Load configuration from .yaml file
-        
+        # Load configuration from .yaml file        
         if not self.config_path.exists():
-            raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
-        
+            raise FileNotFoundError(f"Configuration file not found: {self.config_path}")        
         with self.config_path.open('r', encoding='utf-8') as f:
             config_data = yaml.safe_load(f)
-        
-        # Create config objects
-        
-        self.vault = VaultConfig(
-            
+        # Create config objects        
+        self.vault = VaultConfig(            
             path=Path(config_data['vault']['path']),
             branch=config_data['vault']['branch']
-        )
-        
-        self.sync = SyncConfig(
-            
+        )        
+        self.sync = SyncConfig(            
             mode=config_data['sync']['mode'],
             interval_minutes=config_data['sync']['interval_minutes'],
             process_name=config_data['sync']['process_name']
-        )
-        
-        self.backup = BackupConfig(
-            
+        )        
+        self.backup = BackupConfig(            
             enabled=config_data['backup']['enabled'],
             directory=Path(config_data['backup']['directory']),
             max_backups=config_data['backup']['max_backups']
-        )
-        
-        self.notification = NotificationConfig(
-            
+        )        
+        self.notification = NotificationConfig(            
             enabled=config_data['notification']['enabled'],
             timeout=config_data['notification']['timeout'],
             icon_path=Path(config_data['notification']['icon_path']) 
                       if config_data['notification']['icon_path'] else None
-        )
-        
-        self.git = GitConfig(
-            
+        )        
+        self.git = GitConfig(            
             timeout=config_data['git']['timeout'],
             user_name=config_data['git']['user_name'],
             user_email=config_data['git']['user_email'],
             gitignore=config_data['git']['gitignore']  
-        )
-        
+        )        
         # Build Git remote URL from environment variables
         github_token = os.getenv('GITHUB_TOKEN')
         github_username = os.getenv('GITHUB_USERNAME')
@@ -139,9 +118,7 @@ class ConfigManager:
         self.git_remote = f"https://{github_token}@github.com/{github_username}/{github_repository}.git"
     
     def validate( self ) -> None:
-
-        # Basic validation of config values
-        
+        # Basic validation of config values        
         if not self.vault.path.exists():
             raise ValueError(f"Vault path does not exist: {self.vault.path}")
         
@@ -154,8 +131,7 @@ class ConfigManager:
 
 class Logger:
 
-    def __init__( self, log_file: str, level: str = "INFO", service_mode: bool = False ):
-        
+    def __init__( self, log_file: str, level: str = "INFO", service_mode: bool = False ):        
         self.logger = logging.getLogger("VaultSync")
         self.logger.setLevel(getattr(logging, level.upper()))
         self.service_mode = service_mode
@@ -164,14 +140,11 @@ class Logger:
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
         
-        formatter = logging.Formatter(
-            
+        formatter = logging.Formatter(            
             '[%(asctime)s] [%(levelname)s] %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'
-        )
-        
-        if not service_mode:
-            
+        )        
+        if not service_mode:            
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(formatter)
             self.logger.addHandler(console_handler)
@@ -198,8 +171,7 @@ class NotificationManager:
 
     # Handles desktop notifications
 
-    def __init__( self, config: NotificationConfig, logger: Logger ):
-        
+    def __init__( self, config: NotificationConfig, logger: Logger ):        
         self.config = config
         self.logger = logger
             
@@ -212,14 +184,12 @@ class NotificationManager:
             title = "🔄 Vault Sync" if success else "🔄 Vault Sync Error"
             msg = message or ("Sync completed successfully!" if success else "Sync failed - check logs")
 
-            notification.notify(
-                
+            notification.notify(                
                 title=title,
                 message=msg,
                 app_name="VaultSync",
                 timeout=self.config.timeout
-            )
-            
+            )            
         except Exception as e:
             self.logger.warning(f"Notification error: {e}")
 
@@ -228,8 +198,7 @@ class BackupManager:
 
     # Handles vault backups
 
-    def __init__( self, config: BackupConfig, vault_path: Path, logger: Logger ):
-        
+    def __init__( self, config: BackupConfig, vault_path: Path, logger: Logger ):        
         self.config = config
         self.vault_path = vault_path
         self.logger = logger
@@ -239,55 +208,45 @@ class BackupManager:
         if not self.config.enabled:
             return True
         
-        try:
-            
+        try:            
             self.config.directory.mkdir(parents=True, exist_ok=True)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             backup_path = self.config.directory / f"vault_backup_{timestamp}"
             
-            shutil.copytree(
-                
+            shutil.copytree(                
                 self.vault_path,
                 backup_path,
                 ignore=shutil.ignore_patterns('.git', '*.tmp', '*.lock', '__pycache__', '.trash')
-            )
-            
+            )            
             self.logger.info(f"[+] Backup created: {backup_path.name}")
             self._cleanup_old_backups()
-            return True
-            
+            return True            
         except Exception as e:
             self.logger.error(f"[x] Backup failed: {e}")
             return False
     
-    def _cleanup_old_backups( self ) -> None:
-        
+    def _cleanup_old_backups( self ) -> None:        
         # Remove old backups exceeding max_backups
 
         try:
-            backups = sorted([
-                
+            backups = sorted([                
                 d for d in self.config.directory.iterdir()
-                if d.is_dir() and d.name.startswith('vault_backup_')
-                
+                if d.is_dir() and d.name.startswith('vault_backup_')                
             ], key=lambda x: x.name)
             
-            while len(backups) > self.config.max_backups:
-                
+            while len(backups) > self.config.max_backups:                
                 oldest = backups.pop(0)
                 shutil.rmtree(oldest, ignore_errors=True)
-                self.logger.info(f"[+] Removed old backup: {oldest.name}")
-                
+                self.logger.info(f"[+] Removed old backup: {oldest.name}")                
         except Exception as e:
             self.logger.warning(f"[!] Cleanup warning: {e}")
 
 
-class GitManager:
+class GitManager:    
     
     # Handles all Git operations
 
-    def __init__( self, config: GitConfig, vault_path: Path, remote_url: str, branch: str, logger: Logger ):
-        
+    def __init__( self, config: GitConfig, vault_path: Path, remote_url: str, branch: str, logger: Logger ):        
         self.config = config
         self.vault_path = vault_path
         self.remote_url = remote_url
@@ -296,8 +255,7 @@ class GitManager:
         
         # Setup startup info for hiding Git windows on Windows
         self.startupinfo = None
-        if sys.platform == "win32":
-            
+        if sys.platform == "win32":            
             self.startupinfo = subprocess.STARTUPINFO()
             self.startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             self.startupinfo.wShowWindow = subprocess.SW_HIDE
@@ -306,8 +264,7 @@ class GitManager:
 
         # Run a git command and handle output
         try:
-            result = subprocess.run(
-                
+            result = subprocess.run(                
                 cmd,
                 cwd=self.vault_path,
                 capture_output=True,
@@ -315,8 +272,7 @@ class GitManager:
                 timeout=self.config.timeout,
                 startupinfo=self.startupinfo,
                 creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
-            )
-            
+            )            
             if result.stdout.strip() and "nothing to commit" not in result.stdout.lower():
                 self.logger.info(f"[+] {description}: {result.stdout.strip()}")
             
@@ -324,8 +280,7 @@ class GitManager:
                 stderr = result.stderr.strip()
                 
                 # Filter out common non-error messages
-                if not any(msg in stderr.lower() for msg in [
-                    
+                if not any(msg in stderr.lower() for msg in [                    
                     "lf will be replaced by crlf",
                     "warning: adding embedded git repository",
                     "branch            main       -> fetch_head",
@@ -335,30 +290,25 @@ class GitManager:
                 ]):
                     self.logger.warning(f"[!] {description} stderr: {stderr}")
 
-            return result
-            
+            return result            
         except subprocess.TimeoutExpired:
             self.logger.error(f"[!] {description} timed out")
-            return None
-        
+            return None            
         except Exception as e:
             self.logger.error(f"[x] {description} failed: {e}")
             return None
         
         
-    
     def setup_repository( self ) -> bool:
 
         # Initialize and configure git repository if needed
         try:
-            self.logger.info("[+] Setting up Git repository...")
-            
+            self.logger.info("[+] Setting up Git repository...")            
             if not (self.vault_path / ".git").exists():
                 self.logger.info("[+] Initializing new Git repository")
 
                 if not self._run_command(["git", "init"], "Git init"):
-                    return False
-                
+                    return False                
                 self._run_command(["git", "branch", "-M", self.branch], "Set main branch")
 
             # Configure Git user
@@ -367,11 +317,9 @@ class GitManager:
             
             result = self._run_command(["git", "remote", "get-url", "origin"], "Check remote")
             
-            if not result or result.returncode != 0:
-                
+            if not result or result.returncode != 0:                
                 self.logger.info("🔗 Adding remote origin")
-                self._run_command(["git", "remote", "add", "origin", self.remote_url], "Add remote")
-                
+                self._run_command(["git", "remote", "add", "origin", self.remote_url], "Add remote")                
             else:
                 current_remote = result.stdout.strip()
                 
@@ -379,17 +327,14 @@ class GitManager:
                     self.logger.info("[+] Updating remote URL")
                     self._run_command(["git", "remote", "set-url", "origin", self.remote_url], "Update remote")
 
-            self._create_gitignore()
-            
+            self._create_gitignore()            
             self.logger.info("[+] Git repository setup completed")
-            return True
-            
+            return True            
         except Exception as e:
             self.logger.error(f"[x] Git setup failed: {e}")
             return False
         
         
-    
     def _create_gitignore( self ) -> None:
 
         # Create or update .gitignore based on config
@@ -403,29 +348,25 @@ class GitManager:
         gitignore_sections = []
         
         # Obsidian files
-        if 'obsidian' in self.config.gitignore and self.config.gitignore['obsidian']:
-            
+        if 'obsidian' in self.config.gitignore and self.config.gitignore['obsidian']:            
             gitignore_sections.append("# Obsidian workspace (user-specific)")
             gitignore_sections.extend(self.config.gitignore['obsidian'])
             gitignore_sections.append("") 
         
         # System files 
-        if 'system' in self.config.gitignore and self.config.gitignore['system']:
-            
+        if 'system' in self.config.gitignore and self.config.gitignore['system']:            
             gitignore_sections.append("# System files")
             gitignore_sections.extend(self.config.gitignore['system'])
             gitignore_sections.append("")  
         
         # Directories
-        if 'directories' in self.config.gitignore and self.config.gitignore['directories']:
-            
+        if 'directories' in self.config.gitignore and self.config.gitignore['directories']:            
             gitignore_sections.append("# Directories")
             gitignore_sections.extend(self.config.gitignore['directories'])
             gitignore_sections.append("") 
         
         # Custom 
-        if 'custom' in self.config.gitignore and self.config.gitignore['custom']:
-            
+        if 'custom' in self.config.gitignore and self.config.gitignore['custom']:            
             gitignore_sections.append("# Custom patterns")
             gitignore_sections.extend(self.config.gitignore['custom'])
             gitignore_sections.append("")  
@@ -439,19 +380,15 @@ class GitManager:
 # End of VaultSync .gitignore
 """
         
-        try:
-            
+        try:            
             gitignore_path.write_text(gitignore_content, encoding='utf-8')
-            self.logger.info(f"[+] .gitignore file {'updated' if gitignore_path.exists() else 'created'} successfully")
-            
+            self.logger.info(f"[+] .gitignore file {'updated' if gitignore_path.exists() else 'created'} successfully")            
             configured_sections = [k for k, v in self.config.gitignore.items() if v]
             if configured_sections:
-                self.logger.info(f"[+] Configured sections: {', '.join(configured_sections)}")
-            
+                self.logger.info(f"[+] Configured sections: {', '.join(configured_sections)}")            
         except Exception as e:
             self.logger.error(f"[x] Failed to create .gitignore: {e}")
             
-
     def _has_initial_commit( self ) -> bool:
 
         # Check if repository has at least one commit
@@ -460,16 +397,37 @@ class GitManager:
             return result and result.returncode == 0
         except:
             return False
+
+    def _remote_branch_exists( self ) -> bool:
+
+        # Check if the remote branch exists
+
+        try:            
+            result = self._run_command(["git", "ls-remote", "--heads", "origin", self.branch], "Check remote branch")
+            return result and result.returncode == 0 and result.stdout.strip()            
+        except:
+            return False
         
     def pull(self) -> bool:
 
-        # Pull changes from remote repository
+        # Pull changes from remote repository        
         try:
             self.logger.info("[+] Pulling changes from remote...")
+            
+            # First check if remote branch exists
+            if not self._remote_branch_exists():                
+                self.logger.info("[*] Remote branch doesn't exist yet - this is normal for new repositories")
+                self.logger.info("[*] Skipping pull, will push local changes to create remote branch")
+                return True
+            
             fetch_result = self._run_command(["git", "fetch", "origin", self.branch], "Fetch")
             
-            if not fetch_result or fetch_result.returncode != 0:
-                
+            if not fetch_result or fetch_result.returncode != 0:                
+                # Check if it's because the remote ref doesn't exist
+                if fetch_result and "couldn't find remote ref" in fetch_result.stderr:
+                    self.logger.info("[*] Remote branch doesn't exist yet - this is normal for new repositories")
+                    return True
+                    
                 self.logger.error("[x] Failed to fetch from remote")
                 return False
             
@@ -479,15 +437,12 @@ class GitManager:
             
             # Handle stashing
             stashed = False
-            if has_changes and self._has_initial_commit():
-                
+            if has_changes and self._has_initial_commit():                
                 self.logger.info("[+] Stashing local changes before pull")
-                stash_result = self._run_command(
-                    
-                    ["git", "stash", "push", "-m", f"Auto-stash before pull {datetime.now()}"],
+                stash_result = self._run_command(                    
+                    ["git", "stash", "push", "-m", f"Auto-stash before pull {datetime.now()}"] ,
                     "Stash"
-                )
-                
+                )                
                 if stash_result and stash_result.returncode == 0:
                     stashed = True
                 else:
@@ -500,8 +455,7 @@ class GitManager:
                 self.logger.info("[+] Successfully pulled changes")
                 
                 # Restore stashed changes
-                if stashed:
-                    
+                if stashed:                    
                     self.logger.info("[+] Restoring stashed changes")
                     pop_result = self._run_command(["git", "stash", "pop"], "Stash pop")
                     
@@ -512,8 +466,7 @@ class GitManager:
                 return True
             else:
                 self.logger.error("[x] Pull failed")
-                return False
-                
+                return False                
         except Exception as e:
             self.logger.error(f"[x] Pull operation failed: {e}")
             return False
@@ -544,16 +497,20 @@ class GitManager:
                 self.logger.info("[*] Nothing new to commit")
                 return True
             
-            # Push to remote
-            push_result = self._run_command(["git", "push", "origin", self.branch], "Push")
+            # Check if this is the first push to an empty repository
+            if not self._remote_branch_exists():
+                self.logger.info("[+] Pushing to empty repository - creating remote branch")
+                push_result = self._run_command(["git", "push", "-u", "origin", self.branch], "Initial push")
+            else:
+                # Normal push
+                push_result = self._run_command(["git", "push", "origin", self.branch], "Push")
             
             if push_result and push_result.returncode == 0:
                 self.logger.info("[+] Successfully pushed changes")
                 return True
             else:
                 self.logger.error("[x] Push failed")
-                return False
-                
+                return False                
         except Exception as e:
             self.logger.error(f"[x] Push operation failed: {e}")
             return False
@@ -561,10 +518,8 @@ class GitManager:
 
 class ProcessMonitor:
 
-    # Monitors if Obsidian process is running
-        
-    def __init__( self, process_name: str, logger: Logger ):
-        
+    # Monitors if Obsidian process is running        
+    def __init__( self, process_name: str, logger: Logger ):        
         self.process_name = process_name
         self.logger = logger
         self._cached_pids = set()
@@ -582,12 +537,11 @@ class ProcessMonitor:
                         proc = psutil.Process(pid)
                         if proc.name() == self.process_name:
                             alive_pids.add(pid)
-                            
+                             
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
             
-            if alive_pids:
-                
+            if alive_pids:                
                 self._cached_pids = alive_pids
                 return True
             
@@ -607,10 +561,9 @@ class ProcessMonitor:
         return False
 
 
-class VaultSync:
+class VaultSync:    
     
     # Main 
-    
     def __init__( self, config_path: str = "config.yaml", env_path: str = ".env", service_mode: bool = False ):
 
         # Load config 
@@ -624,15 +577,13 @@ class VaultSync:
         self.notification = NotificationManager(self.config.notification, self.logger)
         self.backup = BackupManager(self.config.backup, self.config.vault.path, self.logger)
         
-        self.git = GitManager(
-            
+        self.git = GitManager(            
             self.config.git,
             self.config.vault.path,
             self.config.git_remote,
             self.config.vault.branch,
             self.logger
-        )
-        
+        )        
         self.process_monitor = ProcessMonitor(self.config.sync.process_name, self.logger)
         
         # State variables
@@ -654,7 +605,6 @@ class VaultSync:
             self.notification.send(False, "❌ Failed to sync on startup")
             self._initial_pull_done = False
             
-            
     def _handle_obsidian_shutdown( self ) -> None:
 
         # Handle push when Obsidian closes
@@ -665,7 +615,6 @@ class VaultSync:
         else:
             self.notification.send(False, "❌ Failed to push on shutdown")
             
-
     def _periodic_push( self ) -> None:
 
         # Handle periodic push in interval mode
@@ -761,7 +710,6 @@ class VaultSync:
 
 
 def create_service_instance():
-    # Factory for Windows Service
     return VaultSync(service_mode=True)
 
 
