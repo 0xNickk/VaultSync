@@ -88,7 +88,8 @@ python VaultSync.py --notification "enable"
 
 ##  👀 Preview
 
-<img width="1800" height="712" alt="image" src="https://github.com/user-attachments/assets/89233e5a-2f5a-4520-85e5-fd61db33a438" />
+<img width="1800" height="712" alt="image" src="https://github.com/user-attachments/assets/a383f375-6557-423c-8033-338938ed1aec" />
+
 
 
 ## 🔄 Sync Modes
