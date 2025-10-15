@@ -1,6 +1,8 @@
 <p align="center">
-  <img width="250" height="250" src="https://github.com/user-attachments/assets/a2ec549f-d730-4b4e-a0e5-403dafb4dbae" />
+  <img width="250" height="250" src="https://github.com/user-attachments/assets/b2ea31c7-2b3b-4782-8b71-3031132e74e3" />
 </p>
+
+
 
 # VaultSync
 
