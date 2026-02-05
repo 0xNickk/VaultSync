@@ -169,7 +169,7 @@ python VaultSync.py --status  # Check current status
 
 ## ✨ Programmed Features
 
-- Multi-Platform Support - Linux and macOS compatibility
+- Multi-Platform Support - Linux compatibility
 - SSH Authentication - Secure SSH key-based authentication as alternative to tokens
 - Advanced Scheduling - Date/time specific synchronization with cron-like syntax
 - Multi-Repository Support - Manage multiple Obsidian vaults with different repositories
